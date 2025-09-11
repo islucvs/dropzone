@@ -1,3 +1,5 @@
+[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://www.youtube.com/watch?v=1TuKGQQnsJw)
+
 # Componente de Login e Registro de Usuarios
 
 ### 1 - Instale das dependências
