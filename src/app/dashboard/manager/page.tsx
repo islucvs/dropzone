@@ -48,8 +48,15 @@ export default function TabsDemo() {
               <TabsContent className="w-[100%] bg-transparent pl-[10%]" value="inf_spet">
                 <Card className="bg-transparent text-white">
                   <CardHeader>
-                    <div className="flex justify-center">
-                    <img src="../images/infantry/infantry_spetsnaz.png" className="h-[1%] w-[40%]"/>
+                    <div className="flex justify-center relative">
+                      <img 
+                        src="../images/items_bg.png" 
+                        className="h-[1%] w-[40%] relative z-0"
+                      />
+                      <img 
+                        src="../images/infantry/infantry_spetsnaz.png" 
+                        className="h-[100%] w-[40%] absolute z-10 top-0"
+                      />
                     </div>
                     <CardTitle>Spetsnaz Operator</CardTitle>
                     <CardDescription>
@@ -63,8 +70,15 @@ export default function TabsDemo() {
               <TabsContent className="w-[100%] bg-transparent pl-[10%]" value="usmc_spec">
                 <Card className="bg-transparent text-white">
                   <CardHeader>
-                    <div className="flex justify-center">
-                    <img src="../images/infantry/infantry_usmc.png" className="h-[1%] w-[40%]"/>
+                    <div className="flex justify-center relative">
+                      <img 
+                        src="../images/items_bg.png"
+                        className="h-[1%] w-[40%] relative z-0"
+                      />
+                      <img 
+                        src="../images/infantry/infantry_usmc.png" 
+                        className="h-[100%] w-[40%] absolute z-10 top-0"
+                      />
                     </div>
                     <CardTitle>USMC Specialist</CardTitle>
                     <CardDescription>
@@ -78,8 +92,15 @@ export default function TabsDemo() {
               <TabsContent className="w-[100%] bg-transparent pl-[10%]" value="sas_spec">
                 <Card className="bg-transparent text-white">
                   <CardHeader>
-                    <div className="flex justify-center">
-                    <img src="../images/infantry/infantry_sas.png" className="h-[1%] w-[40%]"/>
+                    <div className="flex justify-center relative">
+                      <img 
+                        src="../images/items_bg.png" 
+                        className="h-[1%] w-[40%] relative z-0"
+                      />
+                      <img 
+                        src="../images/infantry/infantry_sas.png" 
+                        className="h-[100%] w-[40%] absolute z-10 top-0"
+                      />
                     </div>
                     <CardTitle>SAS Specialist</CardTitle>
                     <CardDescription>
@@ -288,15 +309,91 @@ export default function TabsDemo() {
           <div className="h-[100%] w-[100%] border-0 flex grid-cols-2 gap-3 p-3">
             <Tabs className="w-[100%] grid-cols-2 gap-2 border-0">
               <TabsList className="w-[20%] grid grid-cols-1 gap-2" >
-                <TabsTrigger value="mbts">M1A1 Abrams</TabsTrigger>
+                <TabsTrigger value="mbts_abrams">M1A1 Abrams</TabsTrigger>
+                <TabsTrigger value="mbts_merkava">Merkava MK4</TabsTrigger>
+                <TabsTrigger value="mbts_pl01">PL-01</TabsTrigger>
+                <TabsTrigger value="mbts_type99">Type 99/A</TabsTrigger>
               </TabsList>
-              <TabsContent className="w-[100%] bg-transparent pl-[10%]" value="mbts">
+              <TabsContent className="w-[100%] bg-transparent pl-[10%]" value="mbts_abrams">
                 <Card className="bg-transparent text-white">
                   <CardHeader>
-                    <div className="flex justify-center">
-                    <img src="../images/mbt/mbt_abrams.png" className="h-[1%] w-[40%]"/>
+                    <div className="flex justify-center relative">
+                      <img 
+                        src="../images/items_bg.png" 
+                        className="h-[1%] w-[40%] relative z-0"
+                      />
+                      <img 
+                        src="../images/mbt/mbt_abrams.png" 
+                        className="h-[100%] w-[40%] absolute z-10 top-0"
+                      />
                     </div>
                     <CardTitle>M1A1 Abrams TUSK II</CardTitle>
+                    <CardDescription>
+                      The Hornet is a versatile and agile fighter aircraft used by
+                      the UNSC Navy. It is capable of both air-to-air and air-to-ground
+                      combat, making it a valuable asset in various mission profiles.
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </TabsContent>
+              <TabsContent className="w-[100%] bg-transparent pl-[10%]" value="mbts_merkava">
+                <Card className="bg-transparent text-white">
+                  <CardHeader>
+                    <div className="flex justify-center relative">
+                      <img 
+                        src="../images/items_bg.png" 
+                        className="h-[1%] w-[40%] relative z-0"
+                      />
+                      <img 
+                        src="../images/mbt/mbt_merkava.png" 
+                        className="h-[100%] w-[40%] absolute z-10 top-0"
+                      />
+                    </div>
+                    <CardTitle>Merkava MK4</CardTitle>
+                    <CardDescription>
+                      The Hornet is a versatile and agile fighter aircraft used by
+                      the UNSC Navy. It is capable of both air-to-air and air-to-ground
+                      combat, making it a valuable asset in various mission profiles.
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </TabsContent>
+              <TabsContent className="w-[100%] bg-transparent pl-[10%]" value="mbts_pl01">
+                <Card className="bg-transparent text-white">
+                  <CardHeader>
+                    <div className="flex justify-center relative">
+                      <img 
+                        src="../images/items_bg.png" 
+                        className="h-[1%] w-[40%] relative z-0"
+                      />
+                      <img 
+                        src="../images/mbt/mbt_pl01.png" 
+                        className="h-[100%] w-[40%] absolute z-10 top-0"
+                      />
+                    </div>
+                    <CardTitle>PL-01</CardTitle>
+                    <CardDescription>
+                      The Hornet is a versatile and agile fighter aircraft used by
+                      the UNSC Navy. It is capable of both air-to-air and air-to-ground
+                      combat, making it a valuable asset in various mission profiles.
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </TabsContent>
+              <TabsContent className="w-[100%] bg-transparent pl-[10%]" value="mbts_type99">
+                <Card className="bg-transparent text-white">
+                  <CardHeader>
+                    <div className="flex justify-center relative">
+                      <img 
+                        src="../images/items_bg.png" 
+                        className="h-[1%] w-[40%] relative z-0"
+                      />
+                      <img 
+                        src="../images/mbt/mbt_type99.png" 
+                        className="h-[100%] w-[40%] absolute z-10 top-0"
+                      />
+                    </div>
+                    <CardTitle>Type 99/A</CardTitle>
                     <CardDescription>
                       The Hornet is a versatile and agile fighter aircraft used by
                       the UNSC Navy. It is capable of both air-to-air and air-to-ground

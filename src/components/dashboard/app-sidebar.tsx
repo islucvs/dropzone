@@ -41,7 +41,7 @@ const items = [
   },
   {
     title: "MATCHES",
-    url: "/builder",
+    url: "/beta",
     icon: CgPlayListSearch,
   },
   {
