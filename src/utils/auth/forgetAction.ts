@@ -34,7 +34,8 @@ export async function forgetAction(formData: FormData): Promise<Message> {
 
   const token: string = crypto.randomBytes(32).toString("hex");
 
-  const existingToken = await db.passwordResetToken.findUnique({
+  // Use findFirst instead of findUnique
+  const existingToken = await db.passwordResetToken.findFirst({
     where: {
       userId: user.id,
     },
@@ -43,7 +44,7 @@ export async function forgetAction(formData: FormData): Promise<Message> {
   if (existingToken) {
     await db.passwordResetToken.update({
       where: {
-        userId: user.id,
+        id: existingToken.id, // Use the token's id for update
       },
       data: {
         token,
@@ -53,9 +54,10 @@ export async function forgetAction(formData: FormData): Promise<Message> {
   } else {
     await db.passwordResetToken.create({
       data: {
-        userId: user.id,
+        userId: user.id,   // direct FK
         email: user.email,
         token,
+        expires: new Date(Date.now() + 1000 * 60 * 60), // e.g. +1h
       },
     });
   }

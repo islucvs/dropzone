@@ -16,22 +16,32 @@ export default async function verifyCodeAction(
     };
   }
 
-  const user = await db.user.findFirst({
-    where: {
-      confirmCode: data.code,
-    },
+  // Find the reset/confirmation token
+  const resetToken = await db.passwordResetToken.findUnique({
+    where: { token: data.code },
   });
 
-  if (!user) {
+  if (!resetToken) {
     return { success: false, message: "Código inválido" };
   }
 
+  // Check expiration
+  if (resetToken.expires < new Date()) {
+    return { success: false, message: "Código expirado" };
+  }
+
+  // Confirm the user
   await db.user.update({
-    where: { id: user.id },
+    where: { id: resetToken.userId },
     data: {
-      confirmCode: null,
       confirmed: true,
+      confirmCode: null,
     },
+  });
+
+  // Invalidate/delete the token so it can't be reused
+  await db.passwordResetToken.delete({
+    where: { id: resetToken.id },
   });
 
   return {
