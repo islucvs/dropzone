@@ -81,6 +81,17 @@ export default function DropzoneGame() {
     income: 0,
     lastUpdate: Date.now()
   });
+  const isInConqueredArea = (position: Position): boolean => {
+    return controlPoints.some(cp => {
+      if (!cp.ownedByPlayer) return false;
+      
+      const dx = position.x - cp.position.x;
+      const dy = position.y - cp.position.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      return distance <= cp.radius;
+    });
+  };
   const [unitCost] = useState(20000000);
   const [isCtrlPressed, setIsCtrlPressed] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
@@ -223,8 +234,9 @@ export default function DropzoneGame() {
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
                 // If player unit gets too close to enemy (within 40 units), it dies
-                if (distance < 40) {
+                if (distance < 100) {
                   unit.health = 0;
+                  unit.selected = false;
                 }
               }
             });
@@ -271,7 +283,10 @@ const handleMapClick = (e: React.MouseEvent) => {
         attackRange: template.attackRange,
         selected: false
       };
-      
+      if (!isInConqueredArea({ x: boundedX, y: boundedY })) {
+        alert('You can only place units in conquered areas!');
+        return;
+      }
       setUnits(prev => [...prev, newUnit]);
       setDraggingUnitType(null);
     }
@@ -328,42 +343,49 @@ const handleMapClick = (e: React.MouseEvent) => {
     }
   };
 
-const handleMapDrop = (e: React.DragEvent) => {
-  e.preventDefault();
-  setIsDragging(false);
-  if (economy.money < unitCost) {
-    // Not enough money
-    alert(`You need ${unitCost.toLocaleString()} dollars to place a unit!`);
-    return;
-  }
-  setEconomy(prev => ({ ...prev, money: prev.money - unitCost }));
-  if (mapRef.current) {
-    const unitType = e.dataTransfer.getData('unitType');
-    const rect = mapRef.current.getBoundingClientRect();
-    const dropX = (e.clientX - rect.left - viewport.x) / viewport.scale;
-    const dropY = (e.clientY - rect.top - viewport.y) / viewport.scale;
+  const handleMapDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
     
-    // Apply boundary constraints
-    const boundedX = Math.max(0, Math.min(mapDimensions.width, dropX));
-    const boundedY = Math.max(0, Math.min(mapDimensions.height, dropY));
-    
-    const template = unitTemplates.find(t => t.id === unitType);
-    if (template) {
-      const newUnit: Unit = {
-        id: `unit-${Date.now()}`,
-        type: 'player',
-        position: { x: boundedX, y: boundedY },
-        destination: null,
-        health: template.health,
-        attackRange: template.attackRange,
-        selected: false
-      };
+    if (mapRef.current) {
+      const unitType = e.dataTransfer.getData('unitType');
+      const rect = mapRef.current.getBoundingClientRect();
+      const dropX = (e.clientX - rect.left - viewport.x) / viewport.scale;
+      const dropY = (e.clientY - rect.top - viewport.y) / viewport.scale;
       
-      setUnits(prev => [...prev, newUnit]);
+      // Apply boundary constraints
+      const boundedX = Math.max(0, Math.min(mapDimensions.width, dropX));
+      const boundedY = Math.max(0, Math.min(mapDimensions.height, dropY));
+      
+      // Check if drop position is in conquered area
+      if (!isInConqueredArea({ x: boundedX, y: boundedY })) {
+        alert('You can only place units in conquered areas!');
+        return;
+      }
+      
+      // Check if player has enough money
+      if (economy.money < unitCost) {
+        alert(`You need ${unitCost.toLocaleString()} dollars to place a unit!`);
+        return;
+      }
+      
+      const template = unitTemplates.find(t => t.id === unitType);
+      if (template) {
+        const newUnit: Unit = {
+          id: `unit-${Date.now()}`,
+          type: 'player',
+          position: { x: boundedX, y: boundedY },
+          destination: null,
+          health: template.health,
+          attackRange: template.attackRange,
+          selected: false
+        };
+        
+        setUnits(prev => [...prev, newUnit]);
+        setEconomy(prev => ({ ...prev, money: prev.money - unitCost }));
+      }
     }
-  }
-};
-
+  };
   // Map navigation handlers
   const handleMapMouseDown = (e: React.MouseEvent) => {
     if (e.button === 1 || e.button === 0) { // Middle click or left click
@@ -476,6 +498,29 @@ const handleMapDrop = (e: React.DragEvent) => {
         </div>
       </div>
 
+      {/* Conquered area visual feedback */}
+      {controlPoints
+        .filter(cp => cp.ownedByPlayer)
+        .map(cp => {
+          const transformedPos = transformPosition(cp.position);
+          const radius = transformSize(cp.radius);
+          
+          return (
+            <div
+              key={`area-${cp.id}`}
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                left: transformedPos.x - radius,
+                top: transformedPos.y - radius,
+                width: radius * 2,
+                height: radius * 2,
+                backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                border: '2px dashed rgba(0, 255, 0, 0.5)'
+              }}
+            />
+          );
+        })}
+
       {/* Main game area */}
       <div className="flex-1 flex flex-col items-center justify-center p-1">        
         <div 
@@ -583,27 +628,27 @@ const handleMapDrop = (e: React.DragEvent) => {
                 {/* Player units */}
                 {unit.type === 'player' && (
                   <div
-                    className={`z-[100] absolute cursor-pointer transition-transform ${unit.selected ? 'scale-110' : ''} ${unit.health <= 0 ? 'opacity-50' : ''}`}
-                    style={{ 
-                      left: transformedPos.x - size, 
-                      top: transformedPos.y - size,
-                      width: transformSize(48),
-                      height: transformSize(48)
-                    }}
-                    onClick={(e) => handleUnitSelect(unit.id, e)}
+                  className={`z-[100] absolute cursor-pointer transition-transform ${unit.selected ? 'scale-110' : ''} ${unit.health <= 0 ? 'opacity-50' : ''}`}
+                  style={{ 
+                    left: transformedPos.x - size, 
+                    top: transformedPos.y - size,
+                    width: transformSize(48),
+                    height: transformSize(48)
+                  }}
+                  onClick={(e) => handleUnitSelect(unit.id, e)}
                   >
-                    {/* Unit body */}
-                    <img 
-                      src="../images/mbt/mbt_abrams.png" 
-                      className="w-full h-full"
-                      alt="Unit"
-                      z-index="100"
-                    />
+                  {/* Unit body */}
+                  <img 
+                    src="../images/mbt/mbt_abrams.png" 
+                    className="w-full h-full pointer-events-none"
+                    alt="Unit"
+                  />
                     
+                    {/* Attack range indicator (only when selected and alive) */}
                     {/* Attack range indicator (only when selected and alive) */}
                     {unit.selected && unit.health > 0 && (
                       <div 
-                        className="z-[-10] absolute rounded-full border-2 border-red-500 border-dashed "
+                        className="z-[-10] absolute rounded-full border-2 border-red-500 border-dashed pointer-events-none"
                         style={{ 
                           width: unit.attackRange * 2 * viewport.scale, 
                           height: unit.attackRange * 2 * viewport.scale, 

@@ -17,33 +17,41 @@ export default function Page() {
     event.preventDefault();
     setLoading(true);
 
-    const data = new FormData(event.target as HTMLFormElement);
-    const result = await loginAction(data);
+    try {
+      const data = new FormData(event.target as HTMLFormElement);
+      const result = await loginAction(data);
 
-    if (!result.success) {
-      toast.error(result.message);
-      setLoading(false);
-      return;
-    }
+      if (!result.success) {
+        toast.error(result.message);
+        setLoading(false);
+        return;
+      }
 
-    if (result.type === "info") {
-      toast.info(result.message);
-    } else {
+      // Show success message
       toast.success(result.message);
+      
+      // Redirect to dashboard
+      router.push("/dashboard");
+      router.refresh(); // Refresh to update auth state
+      
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error("An unexpected error occurred");
+    } finally {
+      setLoading(false);
     }
-    setLoading(true);
-    router.push("/dashboard");
   };
+  
   return (
     <div className="h-screen w-full relative flex flex-col gap-10 items-end-safe justify-center pr-40 bg-[#000]">
-        <img className="absolute left-0 bottom-0 h-[100%] w-[100vh]" src="/images/dropzone.png" />
+        <img className="absolute left-0 bottom-0 h-[100%] w-[100vh]" src="/images/dropzone.png" alt="Dropzone background" />
         <form
           onSubmit={handleSubmit}
           className="z-10 w-full md:w-[400px] bg-transparent py-10"
         >
           <div className="inline-flex">
             <div className="relative align-left justify-self-start">
-              <img src="/images/dropzone_logo.jpg" className="relative h-20" />
+              <img src="/images/dropzone_logo.jpg" alt="Dropzone logo" className="relative h-20" />
             </div>
 
             <div className="text-left inline-grid grid-cols-1 col-span-2 pl-9">
@@ -64,6 +72,7 @@ export default function Page() {
               id="username"
               disabled={loading}
               placeholder="Type your ID"
+              required
             />
           </div>
 
