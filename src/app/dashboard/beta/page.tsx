@@ -2362,11 +2362,11 @@ return (
               {unit.type === 'enemy' && unit.health > 0 && unit.isVisible && (
                 <div
                   className={`absolute cursor-pointer transition-all duration-200 ${unit.selected ? 'scale-110 z-50' : 'z-40'}`}
-                  style={{ 
-                    left: transformedPos.x - transformSize(20), 
-                    top: transformedPos.y - transformSize(20),
-                    width: transformSize(40),
-                    height: transformSize(40),
+                  style={{
+                    left: transformedPos.x - size,
+                    top: transformedPos.y - size,
+                    width: size * 2,
+                    height: size * 2,
                   }}
                   onClick={(e) => handleUnitSelect(unit.id, e)}
                 >
@@ -2399,13 +2399,13 @@ return (
                   
                   {/* Attack range when selected */}
                   {unit.selected && (
-                    <div 
+                    <div
                       className="absolute rounded-full border border-red-500/30 pointer-events-none"
-                      style={{ 
-                        width: (unit.attackRange * 2) * viewport.scale, 
-                        height: (unit.attackRange * 2) * viewport.scale, 
-                        left: transformSize(20) - (unit.attackRange * viewport.scale), 
-                        top: transformSize(20) - (unit.attackRange * viewport.scale),
+                      style={{
+                        width: (unit.attackRange * 2) * viewport.scale,
+                        height: (unit.attackRange * 2) * viewport.scale,
+                        left: size - (unit.attackRange * viewport.scale),
+                        top: size - (unit.attackRange * viewport.scale),
                         background: 'radial-gradient(circle, rgba(255,0,0,0.1) 0%, transparent 70%)'
                       }}
                     />
@@ -2416,18 +2416,18 @@ return (
                     <>
                       <div
                         className="absolute w-2 h-2 bg-red-500 rounded-full border border-white animate-ping"
-                        style={{ 
-                          left: transformPosition(unit.destination).x - transformSize(1), // FIXED: was units.destination
-                          top: transformPosition(unit.destination).y - transformSize(1), // FIXED: was units.destination
+                        style={{
+                          left: transformPosition(unit.destination).x - transformedPos.x + size - transformSize(1),
+                          top: transformPosition(unit.destination).y - transformedPos.y + size - transformSize(1),
                         }}
                       />
                       <div
                         className="absolute h-1 bg-red-500/30 origin-left"
                         style={{
-                          left: transformedPos.x,
-                          top: transformedPos.y,
+                          left: size,
+                          top: size,
                           width: Math.sqrt(
-                            Math.pow(unit.destination.x - unit.position.x, 2) + 
+                            Math.pow(unit.destination.x - unit.position.x, 2) +
                             Math.pow(unit.destination.y - unit.position.y, 2)
                           ) * viewport.scale,
                           transform: `rotate(${Math.atan2(
