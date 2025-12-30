@@ -1,118 +1,219 @@
-[![Watch the video]](https://www.youtube.com/watch?v=1TuKGQQnsJw)
+# Dropzone
 
-# Componente de Login e Registro de Usuarios
+Sistema de autenticação e gerenciamento com Next.js 15, utilizando Next-Auth v5, Prisma ORM, PostgreSQL e shadcn/ui. O projeto inclui funcionalidades de chat em tempo real, sistema de agendamento, visualização de dados geográficos e gerenciamento de unidades militares.
 
-### 1 - Instale das dependências
+## Stack Principal
 
-```shell
-    npm installl
+- **Framework**: Next.js 15 (App Router)
+- **Autenticação**: Next-Auth v5 (JWT, sessão 30 dias)
+- **Banco de Dados**: PostgreSQL via Prisma ORM
+- **UI**: shadcn/ui + Radix UI + Tailwind CSS
+- **Validação**: Zod + React Hook Form
+- **Notificações**: Sonner
+- **Real-time**: Socket.io
+
+## Instalação
+
+### 1. Instalar dependências
+
+```bash
+npm install
 ```
 
----
+### 2. Configurar variáveis de ambiente
 
-### 2 - Crie o Token do Auth.js
+Crie um arquivo `.env` na raiz do projeto:
 
-```shell
-    npx auth secret
-```
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/dropzone"
 
----
+AUTH_SECRET=
+NEXTAUTH_SECRET=
 
-### 3 - Inicie o servidor de Desenvolvimento
-
-```shell
-    npm run dev
-```
-
----
-
-### 4 - Criar banco de dados e usuario ROOT
-
-- Dentro do arquivo prisma/schema.prisma altere o provider para o banco de dados desejado
-
-```shell
-datasource db {
-    provider = "mysql"
-    url = env("DATABASE_URL")
-}
-```
-
-- Altere o string de conexão com o banco de dados no arquivo .env
-
-```shell
-DATABASE_URL="mysql://root@localhost:3306/sistema"
-```
-
-- Execute o comando o para criar um Prisma Client no projeto
-
-```shell
-npx prisma generate
-```
-
-- Crie o banco de dados e sincronize com o projeto
-
-```shell
-npx prisma db push
-```
-
-- Para criar um usuario ROOT altere as variáveis de ambiente com email, nome e senha desejados
-
-```shell
-ROOT_DATABASE_EMAIL="root@mail.com"
+ROOT_DATABASE_USERNAME="admin"
 ROOT_DATABASE_NAME="Administrador"
 ROOT_DATABASE_PASSWORD="123456789"
+
+EMAIL_SERVER_HOST="smtp.gmail.com"
+EMAIL_SERVER_PORT="587"
+EMAIL_SERVER_FROM_ADDRESS="seu-email@gmail.com"
+EMAIL_SERVER_PASSWORD="sua-senha-app"
+EMAIL_SERVER_FROM_NAME="Dropzone"
+
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=dropzone
+DB_PORT=5432
 ```
 
-- Instale os Types no seu projeto
+### 3. Gerar token de autenticação
 
-```shell
- npm install -D typescript ts-node @types/node
+```bash
+npx auth secret
 ```
 
-- Rode o seeder para criar o usuario no banco de dados
+### 4. Iniciar PostgreSQL com Docker
 
-```shell
+```bash
+docker-compose up -d
+```
+
+### 5. Configurar banco de dados
+
+```bash
+npx prisma generate
+npx prisma db push
 npx prisma db seed
 ```
 
----
+### 6. Iniciar servidor de desenvolvimento
 
-### 5 - Configurar servidor SMTP e Alterar visual do email enviado
-
-- Altere o .env com os dados do seu servidor SMTP
-
-```shell
-EMAIL_SERVER_HOST="smtp.gmail.com"
-EMAIL_SERVER_PORT="587"
-EMAIL_SERVER_FROM_ADDRESS="mail@mail.com"
-EMAIL_SERVER_PASSWORD="Sua senha"
-EMAIL_SERVER_FROM_NAME="Seu nome"
+```bash
+npm run dev
 ```
 
-- Alterar visual de email
+O servidor estará disponível em `http://localhost:4000`
 
-    - Acesse a pasta Packages
+## Comandos Úteis
 
-```shell
-    cd src/packages/
+### Desenvolvimento
+
+```bash
+npm run dev
 ```
 
-- Iniciar Servidor para visualização da Prévia de email
+### Build
 
-```shell
-    npm run dev
+```bash
+npm run build
 ```
 
----
+### Linting
 
-<br>
-<br>
-<br>
+```bash
+npm run lint
+```
 
-### Caso queira excluir os dados do banco (CUIDADO)
+### Database
 
-- Resetar banco de dados (irá excluir todos os dados do banco)
+```bash
+npx prisma generate
+npx prisma db push
+npx prisma db seed
+npx prisma migrate reset
+npx prisma studio
+```
 
-```shell
+### Email Templates
+
+Para visualizar e editar templates de email:
+
+```bash
+cd src/packages/transactional
+npm run dev
+```
+
+### Docker
+
+```bash
+docker-compose up -d
+docker-compose down
+docker-compose logs -f
+```
+
+## Estrutura do Projeto
+
+```
+src/
+├── app/
+│   ├── (auth)/              # Rotas de autenticação
+│   ├── api/                 # API Routes
+│   └── dashboard/           # Área protegida
+│       ├── definicoes/      # Configurações
+│       ├── manager/         # Gestão com data tables
+│       ├── builder/         # Visual flow builder
+│       ├── datacenters/     # Visualização geográfica
+│       └── beta/            # Jogo estratégico
+├── components/
+│   ├── ui/                  # Componentes shadcn/ui
+│   ├── form/                # Formulários
+│   ├── dashboard/           # Componentes do dashboard
+│   ├── chat/                # Sistema de chat
+│   └── nodes/               # Flow nodes
+├── lib/
+│   ├── db.ts               # Prisma client
+│   ├── user.ts             # User queries
+│   └── SendEmail.ts        # Nodemailer
+├── services/
+│   ├── unit.service.ts     # Serviço de unidades
+│   └── selected-unit.service.ts
+├── utils/
+│   ├── auth/               # Server actions
+│   └── chat/               # Chat operations
+└── packages/
+    └── transactional/      # Email templates
+```
+
+## Funcionalidades
+
+- Autenticação com Next-Auth v5
+- Sistema de recuperação de senha
+- Gerenciamento de usuários
+- Chat em tempo real multi-room
+- Sistema de agendamento
+- Visualização de dados geográficos com Leaflet
+- Visual flow builder com @xyflow/react
+- Sistema de unidades militares
+- Jogo estratégico em tempo real
+
+## Arquitetura
+
+### Autenticação
+
+Next-Auth v5 configurado com:
+- Provider: Credentials (username/password)
+- Session: JWT (30 dias)
+- Middleware protegendo rotas `/dashboard/*`
+
+### Banco de Dados
+
+Prisma ORM com PostgreSQL:
+- Modelos: User, PasswordResetToken, Room, RoomUser, Message, Schedule, Unit, SelectedUnit
+- Seeders organizados em `prisma/seeds/`
+- Services layer para operações no banco
+
+### Email
+
+- SMTP via Nodemailer
+- Templates React Email
+- Visualização de prévia em desenvolvimento
+
+## Desenvolvimento
+
+### Padrões de Código
+
+- TypeScript com ESM
+- Server Actions retornam `Promise<Message>`
+- Serviços usam apenas Prisma ORM (sem SQL raw)
+- Transformação automática camelCase → snake_case quando necessário
+
+### Branches
+
+- `main`: Branch principal (produção)
+- `dev`: Branch de desenvolvimento
+
+## Resetar Banco de Dados
+
+**CUIDADO**: Este comando irá excluir todos os dados
+
+```bash
 npx prisma migrate reset
 ```
+
+## Vídeo Demo
+
+[![Watch the video](https://img.youtube.com/vi/1TuKGQQnsJw/0.jpg)](https://www.youtube.com/watch?v=1TuKGQQnsJw)
+
+## Licença
+
+MIT

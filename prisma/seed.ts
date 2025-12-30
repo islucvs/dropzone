@@ -1,22 +1,16 @@
 import { PrismaClient } from "@prisma/client";
-import { hashSync } from "bcrypt-ts";
+import { seedUser } from "./seeds/user.seed";
+import { seedUnits } from "./seeds/unit.seed";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const root = await prisma.user.upsert({
-    where: { username: process.env.ROOT_DATABASE_USERNAME },
-    update: {},
-    create: {
-      username: process.env.ROOT_DATABASE_USERNAME ?? "admin",
-      name: process.env.ROOT_DATABASE_NAME ?? "Administrador",
-      password: hashSync(process.env.ROOT_DATABASE_PASSWORD ?? "123456789"),
-    },
-  });
+  console.log("🚀 Iniciando seed do banco de dados...\n");
 
-  console.log("Usuário padrão criado com sucesso", {
-    root,
-  });
+  await seedUser(prisma);
+  await seedUnits(prisma);
+
+  console.log("\n✅ Seed concluído com sucesso!");
 }
 
 main()

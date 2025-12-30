@@ -102,3 +102,33 @@ model Schedule {
 
   @@map("schedules")
 }
+
+model Unit {
+  unitId             String         @id @map("unit_id")
+  name               String
+  category           String
+  class              String
+  imagePath          String         @map("image_path")
+  description        String
+  stats              Json
+  transportCapacity  Json?          @map("transport_capacity")
+  maxCapacity        Int?           @map("max_capacity")
+  canBeTransported   Boolean?       @default(false) @map("can_be_transported")
+  transportSize      Int?           @map("transport_size")
+  selectedUnits      SelectedUnit[]
+
+  @@map("units")
+}
+
+model SelectedUnit {
+  id            Int      @id @default(autoincrement())
+  unitId        String   @map("unit_id")
+  category      String
+  selectedOrder Int      @map("selected_order")
+  userId        String   @default("default_user") @map("user_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  unit          Unit     @relation(fields: [unitId], references: [unitId], onDelete: Cascade)
+
+  @@unique([unitId, userId])
+  @@map("selected_units")
+}
