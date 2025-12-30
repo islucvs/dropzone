@@ -9,10 +9,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br">
+    <html lang="en">
       <body className="dark bg-neutral-900">
         <main>{children}</main>
-        <Toaster className="border-none" />
+        <Toaster 
+          position="bottom-right"
+          theme="dark"
+          toastOptions={{
+            style: {
+              background: '#0a0a0a',
+              border: '1px solid #fc5c00',
+              borderRadius: '0px',
+              color: 'white',
+              fontFamily: 'monospace',
+              fontSize: '14px',
+            },
+            className: 'font-sans',
+          }}
+          richColors
+        />
       </body>
     </html>
   );

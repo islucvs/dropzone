@@ -1,7 +1,6 @@
 "use server";
 
 import { Message } from "@/types/message";
-import { User } from "@/types/user";
 import db from "@/lib/db";
 import { hashSync } from "bcrypt-ts";
 
@@ -36,7 +35,17 @@ export default async function registerAction(
   });
 
   if (findUser) {
-    return { success: false, message: "Esse email já está em uso!" };
+    return { success: false, message: "This email is already in use!" };
+  }
+
+  const findUsername = await db.user.findUnique({
+    where: {
+      username: data.username,
+    },
+  });
+
+  if (findUsername) {
+    return { success: false, message: "This username is already in use!" };
   }
 
   await db.user.create({

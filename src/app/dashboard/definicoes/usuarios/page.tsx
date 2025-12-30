@@ -19,7 +19,7 @@ import RegisterUser from "@/components/user/registerUser";
 export default function Page() {
   const [data, setData] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(true);
 
   useEffect(() => {
     fetchUsers();
@@ -54,7 +54,7 @@ export default function Page() {
               <RegisterUser
                 isAdmin
                 onSuccess={() => {
-                  setDialogOpen(false);
+                  setDialogOpen(true);
                   fetchUsers();
                 }}
               />

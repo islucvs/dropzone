@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import registerAction from "@/utils/auth/registerAction";
 import { toast } from "sonner";
-import PassowordInput from "@/components/form/password-input";
+import PassowordInputs from "@/components/form/password-input";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,7 +103,7 @@ export default function RegisterUser({
         />
       </div>
 
-      <PassowordInput disabled={loading} />
+      <PassowordInputs id="password" name="password" disabled={loading} />
 
       <Button type="submit" className="w-full mt-5" disabled={loading}>
         {loading ? (

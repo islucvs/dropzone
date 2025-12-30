@@ -76,7 +76,7 @@ export function AppSidebar() {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <Sidebar collapsible={"icon"} variant={"sidebar"} className="h-fit w-[100%]">
+      <Sidebar collapsible={"icon"} variant={"sidebar"} className="h-[3rem] w-[100%]">
         <SidebarContent className="overflow-hidden h-1 flex items-center justify-center align-middle">
           <SidebarGroup className="p-0 flex items-center justify-center align-middle">
             <SidebarGroupContent className="bg-[#fc5c00] relative flex items-center justify-center align-middle">

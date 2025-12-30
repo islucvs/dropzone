@@ -1,220 +1,63 @@
-import React from "react";
+"use client"
 
-type ToastTypes =
-  | "normal"
-  | "action"
-  | "success"
-  | "info"
-  | "warning"
-  | "error"
-  | "loading"
-  | "default";
-type PromiseT<Data = any> = Promise<Data> | (() => Promise<Data>);
-interface PromiseIExtendedResult extends ExternalToast {
-  message: React.ReactNode;
-}
-type PromiseTExtendedResult<Data = any> =
-  | PromiseIExtendedResult
-  | ((data: Data) => PromiseIExtendedResult | Promise<PromiseIExtendedResult>);
-type PromiseTResult<Data = any> =
-  | string
-  | React.ReactNode
-  | ((
-      data: Data
-    ) => React.ReactNode | string | Promise<React.ReactNode | string>);
-type PromiseExternalToast = Omit<ExternalToast, "description">;
-type PromiseData<ToastData = any> = PromiseExternalToast & {
-  loading?: string | React.ReactNode;
-  success?: PromiseTResult<ToastData> | PromiseTExtendedResult<ToastData>;
-  error?: PromiseTResult | PromiseTExtendedResult;
-  description?: PromiseTResult;
-  finally?: () => void | Promise<void>;
-};
-interface ToastClassnames {
-  toast?: string;
-  title?: string;
-  description?: string;
-  loader?: string;
-  closeButton?: string;
-  cancelButton?: string;
-  actionButton?: string;
-  success?: string;
-  error?: string;
-  info?: string;
-  warning?: string;
-  loading?: string;
-  default?: string;
-  content?: string;
-  icon?: string;
-}
-interface ToastIcons {
-  success?: React.ReactNode;
-  info?: React.ReactNode;
-  warning?: React.ReactNode;
-  error?: React.ReactNode;
-  loading?: React.ReactNode;
-  close?: React.ReactNode;
-}
-interface Action {
-  label: React.ReactNode;
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  actionButtonStyle?: React.CSSProperties;
-}
-interface ToastT {
-  id: number | string;
-  title?: (() => React.ReactNode) | React.ReactNode;
-  type?: ToastTypes;
-  icon?: React.ReactNode;
-  jsx?: React.ReactNode;
-  richColors?: boolean;
-  invert?: boolean;
-  closeButton?: boolean;
-  dismissible?: boolean;
-  description?: (() => React.ReactNode) | React.ReactNode;
-  duration?: number;
-  delete?: boolean;
-  action?: Action | React.ReactNode;
-  cancel?: Action | React.ReactNode;
-  onDismiss?: (toast: ToastT) => void;
-  onAutoClose?: (toast: ToastT) => void;
-  promise?: PromiseT;
-  cancelButtonStyle?: React.CSSProperties;
-  actionButtonStyle?: React.CSSProperties;
-  style?: React.CSSProperties;
-  unstyled?: boolean;
-  className?: string;
-  classNames?: ToastClassnames;
-  descriptionClassName?: string;
-  position?: Position;
-}
-type Position =
-  | "top-left"
-  | "top-right"
-  | "bottom-left"
-  | "bottom-right"
-  | "top-center"
-  | "bottom-center";
-interface ToastOptions {
-  className?: string;
-  closeButton?: boolean;
-  descriptionClassName?: string;
-  style?: React.CSSProperties;
-  cancelButtonStyle?: React.CSSProperties;
-  actionButtonStyle?: React.CSSProperties;
-  duration?: number;
-  unstyled?: boolean;
-  classNames?: ToastClassnames;
-  closeButtonAriaLabel?: string;
-}
-type Offset =
-  | {
-      top?: string | number;
-      right?: string | number;
-      bottom?: string | number;
-      left?: string | number;
-    }
-  | string
-  | number;
-interface ToasterProps {
-  invert?: boolean;
-  theme?: "light" | "dark" | "system";
-  position?: Position;
-  hotkey?: string[];
-  richColors?: boolean;
-  expand?: boolean;
-  duration?: number;
-  gap?: number;
-  visibleToasts?: number;
-  closeButton?: boolean;
-  toastOptions?: ToastOptions;
-  className?: string;
-  style?: React.CSSProperties;
-  offset?: Offset;
-  mobileOffset?: Offset;
-  dir?: "rtl" | "ltr" | "auto";
-  swipeDirections?: SwipeDirection[];
-  icons?: ToastIcons;
-  containerAriaLabel?: string;
-}
-type SwipeDirection = "top" | "right" | "bottom" | "left";
-interface ToastToDismiss {
-  id: number | string;
-  dismiss: boolean;
-}
-type ExternalToast = Omit<
-  ToastT,
-  "id" | "type" | "title" | "jsx" | "delete" | "promise"
-> & {
-  id?: number | string;
-};
+import { Toaster as SonnerToaster, toast as sonnerToast } from "sonner"
+import { Shield, CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react"
 
-type titleT = (() => React.ReactNode) | React.ReactNode;
-declare const toast: ((
-  message: titleT,
-  data?: ExternalToast
-) => string | number) & {
-  success: (
-    message: titleT | React.ReactNode,
-    data?: ExternalToast
-  ) => string | number;
-  info: (
-    message: titleT | React.ReactNode,
-    data?: ExternalToast
-  ) => string | number;
-  warning: (
-    message: titleT | React.ReactNode,
-    data?: ExternalToast
-  ) => string | number;
-  error: (
-    message: titleT | React.ReactNode,
-    data?: ExternalToast
-  ) => string | number;
-  custom: (
-    jsx: (id: number | string) => React.ReactElement,
-    data?: ExternalToast
-  ) => string | number;
-  message: (
-    message: titleT | React.ReactNode,
-    data?: ExternalToast
-  ) => string | number;
-  promise: <ToastData>(
-    promise: PromiseT<ToastData>,
-    data?: PromiseData<ToastData>
-  ) =>
-    | (string & {
-        unwrap: () => Promise<ToastData>;
-      })
-    | (number & {
-        unwrap: () => Promise<ToastData>;
-      })
-    | {
-        unwrap: () => Promise<ToastData>;
-      };
-  dismiss: (id?: number | string) => string | number;
-  loading: (
-    message: titleT | React.ReactNode,
-    data?: ExternalToast
-  ) => string | number;
-} & {
-  getHistory: () => (ToastT | ToastToDismiss)[];
-  getToasts: () => (ToastT | ToastToDismiss)[];
-};
+// Custom Sonner Toaster component
+export function Toaster() {
+  return (
+    <SonnerToaster
+      position="bottom-right"
+      toastOptions={{
+        unstyled: true,
+        classNames: {
+          toast: "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-lg border p-4 shadow-lg transition-all",
+          title: "text-sm font-medium tracking-tight",
+          description: "text-xs opacity-90",
+          actionButton: "inline-flex h-8 shrink-0 items-center justify-center rounded-md text-xs font-medium",
+          cancelButton: "inline-flex h-8 shrink-0 items-center justify-center rounded-md text-xs font-medium",
+          error: "border-[#ff3333]/20 bg-[#1a0a0a] text-white",
+          success: "border-[#00ff88]/20 bg-[#0a1a0f] text-white",
+          warning: "border-[#ffaa00]/20 bg-[#1a150a] text-white",
+          info: "border-[#00aaff]/20 bg-[#0a0f1a] text-white",
+          default: "border-[#333333] bg-[#111111] text-white",
+        },
+      }}
+    />
+  )
+}
 
-declare function useSonner(): {
-  toasts: ToastT[];
-};
-declare const Toaster: React.ForwardRefExoticComponent<
-  ToasterProps & React.RefAttributes<HTMLElement>
->;
-
-export {
-  type Action,
-  type ExternalToast,
-  type ToastClassnames,
-  type ToastT,
-  type ToastToDismiss,
-  Toaster,
-  type ToasterProps,
-  toast,
-  useSonner,
-};
+// SIMPLEST FIX: Just use sonnerToast directly, don't wrap it
+// Or create a very simple wrapper that doesn't break React
+export const toast = {
+  success: (message: string, options?: any) => sonnerToast.success(message, options),
+  error: (message: string, options?: any) => sonnerToast.error(message, options),
+  warning: (message: string, options?: any) => sonnerToast.warning(message, options),
+  info: (message: string, options?: any) => sonnerToast.info(message, options),
+  tactical: (message: string, description?: string) => {
+    return sonnerToast.custom((t) => (
+      <div className="group border border-[#fc5c00]/20 bg-[#1a0d05] p-4 rounded-lg shadow-lg">
+        <div className="flex items-start gap-3">
+          <Shield className="w-5 h-5 text-[#fc5c00] flex-shrink-0" />
+          <div className="flex-1">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-medium text-white tracking-tight">TACTICAL ALERT</h3>
+              <button
+                onClick={() => sonnerToast.dismiss(t)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity text-[#888888] hover:text-white"
+              >
+                <XCircle className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-sm text-white mt-1">{message}</p>
+            {description && (
+              <p className="text-xs text-[#888888] mt-1">{description}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    ), {
+      duration: 6000,
+    })
+  }
+}
