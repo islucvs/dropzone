@@ -63,7 +63,7 @@ export class SelectedUnitService {
 
     const nextOrder = count + 1
 
-    return await db.selectedUnit.create({
+    const selectedUnit = await db.selectedUnit.create({
       data: {
         unitId,
         category,
@@ -74,6 +74,22 @@ export class SelectedUnitService {
         unit: true
       }
     })
+
+    return {
+      id: selectedUnit.id,
+      unit_id: selectedUnit.unitId,
+      category: selectedUnit.category,
+      selected_order: selectedUnit.selectedOrder,
+      user_id: selectedUnit.userId,
+      name: selectedUnit.unit.name,
+      image_path: selectedUnit.unit.imagePath,
+      description: selectedUnit.unit.description,
+      stats: selectedUnit.unit.stats,
+      transport_capacity: selectedUnit.unit.transportCapacity,
+      max_capacity: selectedUnit.unit.maxCapacity,
+      can_be_transported: selectedUnit.unit.canBeTransported,
+      transport_size: selectedUnit.unit.transportSize
+    }
   }
 
   static async updateOrder(unitId: string, selectedOrder: number, userId: string = 'default_user') {
