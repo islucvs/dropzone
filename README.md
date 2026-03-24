@@ -1,6 +1,11 @@
 # Dropzone
 
-Sistema de autenticação e gerenciamento com Next.js 15, utilizando Next-Auth v5, Prisma ORM, PostgreSQL e shadcn/ui. O projeto inclui funcionalidades de chat em tempo real, sistema de agendamento, visualização de dados geográficos e gerenciamento de unidades militares.
+Jogo baseado em estratégia e gerenciamento de unidades militares.
+
+
+## Vídeo Demo
+
+[![Watch the video](https://img.youtube.com/vi/1TuKGQQnsJw/0.jpg)](https://www.youtube.com/watch?v=1TuKGQQnsJw)
 
 ## Stack Principal
 
@@ -209,10 +214,6 @@ Prisma ORM com PostgreSQL:
 ```bash
 npx prisma migrate reset
 ```
-
-## Vídeo Demo
-
-[![Watch the video](https://img.youtube.com/vi/1TuKGQQnsJw/0.jpg)](https://www.youtube.com/watch?v=1TuKGQQnsJw)
 
 ## Licença
 
