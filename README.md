@@ -5,7 +5,7 @@ Jogo baseado em estratégia e gerenciamento de unidades militares.
 
 ## Vídeo Demo
 
-[![Watch the video]([https://www.youtube.com/watch?v=1TuKGQQnsJw])]
+[![Watch the video](https://i9.ytimg.com/vi_webp/t_64U8LXAw4/mqdefault.webp?v=69cc4e9f&sqp=COycsc4G&rs=AOn4CLCt7gXncep3fbj3bqewXaaXpQANbg)](https://youtu.be/t_64U8LXAw4)
 
 ## Stack Principal
 
